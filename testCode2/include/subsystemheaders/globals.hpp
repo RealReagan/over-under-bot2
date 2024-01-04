@@ -21,5 +21,7 @@ struct drivebaseMotorStore{
     motorControl lR;
 
 };
-
+//Stores all motors usd for drivebase
 extern drivebaseMotorStore drivebaseMotors;
+//Stores value for puncher motor and PID controls
+extern puncherControl puncher;

@@ -68,9 +68,9 @@ void autonomous() {}
 void opcontrol() {
 
 	while (true) {
-
 		PIDMotorSet(master.get_analog(ANALOG_LEFT_X), master.get_analog(ANALOG_RIGHT_Y));
-		std::cout << "wow";	
+		std::cout << "wow";	//TODO test cout to see if I can check variables with console rather than brain
 		pros::delay(20);
+
 	}
 }
