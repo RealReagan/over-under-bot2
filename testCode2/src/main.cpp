@@ -66,10 +66,23 @@ void autonomous() {}
  */
 
 void opcontrol() {
+		bool spinningPuncher = false;
+		float currentHeading = 0;
 
 	while (true) {
-		PIDMotorSet(master.get_analog(ANALOG_LEFT_X), master.get_analog(ANALOG_RIGHT_Y));
-		std::cout << "wow";	//TODO test cout to see if I can check variables with console rather than brain
+
+
+		if(master.get_digital_new_press(DIGITAL_R2)) {
+			spinningPuncher = !spinningPuncher;
+			puncherToggle(spinningPuncher);
+			currentHeading = headingHold.sensor.get_rotation();
+		}
+		if(spinningPuncher) {
+			inertialMotorSet(currentHeading);
+		}
+		else {
+			PIDMotorSet(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
+		}
 		pros::delay(20);
 
 	}

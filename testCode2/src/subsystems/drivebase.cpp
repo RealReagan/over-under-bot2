@@ -33,6 +33,27 @@ void PIDMotorSet(const float& vertTar, const float& latTar) {
 
 }
 
+void inertialMotorSet(const float& target) {
+
+    auto adjustedValues = inertialCalcPIDMotors(target);
+
+    spinMotors(
+    adjustedValues.rF,
+    adjustedValues.rM,
+    adjustedValues.rR,
+    adjustedValues.lF,
+    adjustedValues.lM,
+    adjustedValues.lR
+    );
+
+}
+
+const bool toggleTurnControl() {
+    const auto shouldSpin = puncher.is_stopped();
+
+    return !shouldSpin;    
+}
+
 /*
 Calculations
 */
@@ -44,6 +65,21 @@ const adjustedMotors calcPIDMotors(const float& rightTar, const float& leftTar) 
         drivebaseMotors.lF.PIDAdjust(leftTar),
         drivebaseMotors.lM.PIDAdjust(leftTar),
         drivebaseMotors.lR.PIDAdjust(leftTar)
+    };
+
+    return temp;
+}
+
+const adjustedMotors inertialCalcPIDMotors(const float& target) {
+    const auto& returnedValue = headingHold.PIDAdjust(target);
+
+    const auto& temp = adjustedMotors{
+        - returnedValue,
+        - returnedValue,
+        - returnedValue,
+        returnedValue,
+        returnedValue,
+        returnedValue
     };
 
     return temp;
@@ -79,6 +115,45 @@ const float speedPID::integrate(const float& error) {
 }
 
 const float speedPID::derive(const float& error) {
+    const float derivative = error - lastError;
+
+    return kD * derivative;
+}
+
+#define kPI .75
+#define kII .1
+#define kDI 0
+#define integralLimit 10
+
+const float targetPIDI::PIDAdjust(const float& target) {
+    const float& position = sensor.get_rotation();
+
+    return proport(target, position);
+}
+
+const float targetPIDI::proport(const float& target, const float& position) {
+    float error = target - position;
+    if(fabs(error) > 127) {
+        error = (error / fabs(error)) * 127;
+    }
+
+    return kPI * error + integrate(error);
+}
+
+const float targetPIDI::integrate(const float& error) {
+    integral = integral + error;
+
+    if(fabs(error) > integralLimit) {
+        integral = 0;
+    }
+    if(fabs(integral) > 100) {
+        integral = integral/fabs(integral) * 100;
+    }
+
+    return kII * integral + derive(error);
+}
+
+const float targetPIDI::derive(const float& error) {
     const float derivative = error - lastError;
 
     return kD * derivative;

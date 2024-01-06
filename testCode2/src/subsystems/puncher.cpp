@@ -1,6 +1,6 @@
 #include "main.h"
 
-#define puncherSpeed 127
+#define puncherSpeed 127 * .80
 
 /*
 Helper functions
@@ -19,13 +19,8 @@ void PIDPuncherSet() {
     puncherRotation.PIDAdjust(float(distance));
 }
 
-void puncherToggle() {
-    bool isMoving = puncher.is_stopped();
-    if(isMoving) {
-        spinPuncher(0);
-        return;
-    }
-    spinPuncher(puncherSpeed);
+void puncherToggle(bool shouldSpin) {
+    spinPuncher(shouldSpin * puncherSpeed);
 }
 
 /*

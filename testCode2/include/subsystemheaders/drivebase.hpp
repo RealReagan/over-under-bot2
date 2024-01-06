@@ -22,6 +22,10 @@ Driver controls
 */
 //finds PID values to spin motors given target
 extern void PIDMotorSet(const float& vertTar, const float& latTar);
+extern const adjustedMotors inertialCalcPIDMotors(const float& target);
+extern void inertialMotorSet(const float& target);
+
+const bool toggleTurnControl();
 
 /*
 Calculations

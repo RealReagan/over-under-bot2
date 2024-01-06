@@ -22,6 +22,20 @@ struct targetPID {
     const float derive(const float& error);
 };
 
+struct targetPIDI {
+    pros::IMU sensor;
+    float integral;
+    float lastError;
+    //returns value to spin motor according to PID adjusment
+    const float PIDAdjust(const float& target);
+    //finds error in motor speed to target
+    const float proport(const float& target, const float& speed);
+    //finds total value of accumulated error(integral)
+    const float integrate(const float& error);
+    //finds immediate change in error(derivative)
+    const float derive(const float& error);
+};
+
 //create struct for unique motor cmds
 struct speedPID {
     pros::Motor storedMotor;
@@ -54,6 +68,7 @@ extern drivebaseMotorStore drivebaseMotors;
 
 //Stores value for puncher motor and PID controls
 extern targetPID puncherRotation;
+extern targetPIDI headingHold;
 
 //Create rotation sensor for puncher
 extern pros::Motor puncher;
