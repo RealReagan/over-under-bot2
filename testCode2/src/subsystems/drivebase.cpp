@@ -50,22 +50,25 @@ const adjustedMotors calcPIDMotors(const float& rightTar, const float& leftTar) 
 }
 
 /*
-Collection of functions used in motorControl
+Collection of functions used in speedPID
 */
+#define kP 0
+#define kI 0
+#define kD 0
 
-const float motorControl::PIDAdjust(const float& target) {
+const float speedPID::PIDAdjust(const float& target) {
     const float& speed = storedMotor.get_actual_velocity();
 
     return target - proport(target, speed);
 }
 
-const float motorControl::proport(const float& target, const float& speed) {
+const float speedPID::proport(const float& target, const float& speed) {
     const float error = speed - target;
 
     return kP * error + integrate(error);
 }
 
-const float motorControl::integrate(const float& error) {
+const float speedPID::integrate(const float& error) {
     integral = integral + error;
 
     if (fabs(integral) < 10) {
@@ -75,7 +78,7 @@ const float motorControl::integrate(const float& error) {
     return kI * integral + derive(error);
 }
 
-const float motorControl::derive(const float& error) {
+const float speedPID::derive(const float& error) {
     const float derivative = error - lastError;
 
     return kD * derivative;
