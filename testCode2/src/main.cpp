@@ -74,6 +74,8 @@ void opcontrol() {
 		if (master.get_digital_new_press(DIGITAL_L1)) {
 			puncherToggle();
 		}
+		int32_t shouldSpin = master.get_digital(DIGITAL_R1) - master.get_digital(DIGITAL_R2);
+		setIntake(shouldSpin);
 		pros::delay(20);
 
 	}
