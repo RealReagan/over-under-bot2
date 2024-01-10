@@ -75,6 +75,7 @@ void opcontrol(void);
 /**
  * You can add C++-only headers here
  */
+#include "subsystemheaders\PIDs.hpp"
 #include "subsystemheaders\drivebase.hpp"
 #include "subsystemheaders\globals.hpp"
 #include "subsystemheaders\puncher.hpp"
