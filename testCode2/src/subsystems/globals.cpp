@@ -23,7 +23,6 @@ pros::Controller master(CONTROLLER_MASTER);
 #define rotationI 0
 #define rotationD 0
 
-//initialize motors in drivebase
 drivebaseMotorStore drivebaseMotors = drivebaseMotorStore {
     createPID<pros::Motor>{pros::Motor(rFPort, MOTOR_GEAR_600, false), motorP, motorI, motorD},
     createPID<pros::Motor>{pros::Motor(rMPort, MOTOR_GEAR_600, false), motorP, motorI, motorD},

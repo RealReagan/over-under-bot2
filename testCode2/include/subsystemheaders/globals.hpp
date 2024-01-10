@@ -8,7 +8,6 @@ Structures
 */
 
 
-
 //Struct which contains all drivebase motors for easy access
 struct drivebaseMotorStore{
     createPID<pros::Motor> rF;
@@ -20,12 +19,12 @@ struct drivebaseMotorStore{
 
 };
 
-//Stores all motors usd for drivebase
+//Stores all motors used for drivebase
 extern drivebaseMotorStore drivebaseMotors;
 
-//Stores value for puncher motor and PID controls
+//Stores value for PID controls
 extern createPID<pros::Rotation> puncherRotation;
 extern createPID<pros::Imu> inertialPID;
 
-//Create rotation sensor for puncher
+//Create puncher motor
 extern pros::Motor puncher;

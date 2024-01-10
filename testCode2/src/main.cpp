@@ -70,6 +70,10 @@ void opcontrol() {
 	while (true) {
 		PIDMotorSet(master.get_analog(ANALOG_LEFT_X), master.get_analog(ANALOG_RIGHT_Y));
 		std::cout << "wow";	//TODO test cout to see if I can check variables with console rather than brain
+
+		if (master.get_digital_new_press(DIGITAL_L1)) {
+			puncherToggle();
+		}
 		pros::delay(20);
 
 	}
