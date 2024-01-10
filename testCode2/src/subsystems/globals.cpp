@@ -12,6 +12,7 @@ pros::Controller master(CONTROLLER_MASTER);
 #define rotationPort 2
 #define inertialPort 3
 #define puncherPort 15
+#define intakePort 13
 
 #define motorP 0
 #define motorI 0
@@ -39,3 +40,4 @@ drivebaseMotorStore drivebaseMotors = drivebaseMotorStore {
  createPID<pros::Imu> inertialPID = createPID<pros::Imu>{pros::Imu(inertialPort), inertialP, inertialI, inertialD};
 
 pros::Motor puncher(puncherPort, MOTOR_GEAR_100, false);
+pros::Motor intake(intakePort, MOTOR_GEAR_200, false);
