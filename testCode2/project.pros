@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "testCode2",
+    "project_name": "testCode",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -309,7 +309,8 @@
       }
     },
     "upload_options": {
-      "icon": "pros"
+      "icon": "pros",
+      "slot": 1
     }
   }
 }

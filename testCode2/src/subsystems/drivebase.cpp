@@ -4,12 +4,12 @@
 Helper functions
 */
 void spinMotors(const float& rFSpd, const float& rMSpd, const float& rRSpd, const float& lFSpd, const float& lMSpd, const float& lRSpd) {
-    drivebaseMotors.rF.storedMotor = rFSpd;
-    drivebaseMotors.rM.storedMotor = rMSpd;
-    drivebaseMotors.rR.storedMotor = rRSpd;
-    drivebaseMotors.lF.storedMotor = lFSpd;
-    drivebaseMotors.lM.storedMotor = lMSpd;
-    drivebaseMotors.lR.storedMotor = lRSpd;
+    drivebaseMotors.rF.readInput = rFSpd;
+    drivebaseMotors.rM.readInput = rMSpd;
+    drivebaseMotors.rR.readInput = rRSpd;
+    drivebaseMotors.lF.readInput = lFSpd;
+    drivebaseMotors.lM.readInput = lMSpd;
+    drivebaseMotors.lR.readInput = lRSpd;
 
 }
 
@@ -37,7 +37,7 @@ void PIDMotorSet(const float& vertTar, const float& latTar) {
 Calculations
 */
 const adjustedMotors calcPIDMotors(const float& rightTar, const float& leftTar) {
-    const auto& temp = adjustedMotors{
+    const auto& adjustedValues = adjustedMotors{
         drivebaseMotors.rF.PIDAdjust(rightTar),
         drivebaseMotors.rM.PIDAdjust(rightTar),
         drivebaseMotors.rR.PIDAdjust(rightTar),
@@ -46,37 +46,5 @@ const adjustedMotors calcPIDMotors(const float& rightTar, const float& leftTar) 
         drivebaseMotors.lR.PIDAdjust(leftTar)
     };
 
-    return temp;
-}
-
-/*
-Collection of functions used in motorControl
-*/
-
-const float motorControl::PIDAdjust(const float& target) {
-    const float& speed = storedMotor.get_actual_velocity();
-
-    return target - proport(target, speed);
-}
-
-const float motorControl::proport(const float& target, const float& speed) {
-    const float error = speed - target;
-
-    return kP * error + integrate(error);
-}
-
-const float motorControl::integrate(const float& error) {
-    integral = integral + error;
-
-    if (fabs(integral) < 10) {
-        integral = 0;
-    }
-
-    return kI * integral + derive(error);
-}
-
-const float motorControl::derive(const float& error) {
-    const float derivative = error - lastError;
-
-    return kD * derivative;
+    return adjustedValues;
 }

@@ -75,8 +75,12 @@ void opcontrol(void);
 /**
  * You can add C++-only headers here
  */
+#include "subsystemheaders\PIDs.hpp"
 #include "subsystemheaders\drivebase.hpp"
 #include "subsystemheaders\globals.hpp"
+#include "subsystemheaders\puncher.hpp"
+#include "subsystemheaders\intake.hpp"
+#include "subsystemheaders\lift.hpp"
 #include <tuple>
 //#include <iostream>
 #endif
