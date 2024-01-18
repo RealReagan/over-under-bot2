@@ -35,6 +35,8 @@ Motors
 */
 //Stores all motors used for drivebase
 extern drivebaseMotorStore drivebaseMotors;
+//store motors for usage in auto
+extern createPID<averageMotors> autoPID;
 
 //Stores value for PID controls
 extern createPID<pros::Rotation> puncherRotation;

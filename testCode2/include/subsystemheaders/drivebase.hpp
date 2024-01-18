@@ -24,6 +24,12 @@ Driver controls
 extern void PIDMotorSet(const float& vertTar, const float& latTar);
 
 /*
+Auto Controls
+*/
+//spins motors a set amount of encoder ticks in either direction or rotates a set amount of degrees in either direction
+extern void PIDTranslate(const float &valueChange, const float & degreeChange);
+
+/*
 Calculations
 */
 //calculates values to spin motors at via. PID functionality

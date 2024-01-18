@@ -34,6 +34,39 @@ void PIDMotorSet(const float& vertTar, const float& latTar) {
 }
 
 /*
+Auto Controls
+*/
+#define errorTolerance 5 //in encoder Ticks
+#define turnErrorTolerance 2 //in degrees
+
+void PIDTranslate(const float &valueChange, const float & degreeChange) {
+    const float &target = autoPID.readInput.getEncoders() + valueChange;
+    float difference = autoPID.readInput.getEncoders() - target;
+
+    const float &degreeTarget = inertialPID.readInput.get_rotation() + valueChange;
+    float degreeDifference = inertialPID.readInput.get_rotation() - target;
+
+    while (difference > errorTolerance && degreeDifference > turnErrorTolerance) {
+        float straightValue = autoPID.PIDAdjust(target);
+        float turnValue = inertialPID.PIDAdjust(degreeTarget);
+
+        float rightValue = straightValue - turnValue;
+        float leftValue = straightValue + turnValue;
+
+        spinMotors(
+            rightValue,
+            rightValue,
+            rightValue,
+            leftValue,
+            leftValue,
+            leftValue
+        );
+
+        difference = autoPID.readInput.getEncoders() - target;
+        degreeDifference = inertialPID.readInput.get_rotation() - target;
+    }
+}
+/*
 Calculations
 */
 const adjustedMotors calcPIDMotors(const float& rightTar, const float& leftTar) {

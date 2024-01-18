@@ -1,7 +1,8 @@
 #include "main.h"
 
-void setPneumatic() {
-
+void setPneumatic(const bool &rightState, const bool &leftState) {
+    rightWing.controlledItem.set_value(rightState);
+    leftWing.controlledItem.set_value(leftState);
 }
 
 /*
