@@ -66,9 +66,8 @@ void autonomous() {}
  */
 
 void opcontrol() {
-
 	while (true) {
-		PIDMotorSet(master.get_analog(ANALOG_LEFT_X), master.get_analog(ANALOG_RIGHT_Y));
+		PIDMotorSet(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
 		std::cout << "wow";	//TODO test cout to see if I can check variables with console rather than brain
 
 		if (master.get_digital_new_press(DIGITAL_L1)) {
@@ -76,6 +75,8 @@ void opcontrol() {
 		}
 		int32_t shouldSpin = master.get_digital(DIGITAL_R1) - master.get_digital(DIGITAL_R2);
 		setIntake(shouldSpin);
+		int32_t shouldSpinLift = master.get_digital(DIGITAL_UP) - master.get_digital(DIGITAL_DOWN);
+		setLift(shouldSpinLift);
 		pros::delay(20);
 
 	}

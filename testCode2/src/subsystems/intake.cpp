@@ -3,13 +3,13 @@
 /*
 Helpers
 */
-extern void spinIntake(int32_t speed){
+void spinIntake(int32_t speed){
     intake = speed;
 }
 /*
 Driver functions
 */
 #define intakeSpeed 127
-extern void setIntake(int32_t shouldSpin){
+void setIntake(int32_t shouldSpin){
     spinIntake(intakeSpeed *  shouldSpin);
 }

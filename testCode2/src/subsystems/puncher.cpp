@@ -14,7 +14,7 @@ Driver controls
 */
 
 void puncherToggle() {
-    bool isMoving = puncher.get_actual_velocity() != 0;
+    bool isMoving = puncher.get_actual_velocity() == 0;
     spinPuncher(puncherSpeed * isMoving);
 }
 

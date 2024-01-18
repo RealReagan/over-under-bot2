@@ -27,5 +27,6 @@ extern createPID<pros::Rotation> puncherRotation;
 extern createPID<pros::Imu> inertialPID;
 
 //Create puncher motor
+extern pros::Motor liftMotor;
 extern pros::Motor puncher;
 extern pros::Motor intake;
