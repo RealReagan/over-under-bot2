@@ -14,10 +14,15 @@ pros::Controller master(CONTROLLER_MASTER);
 #define puncherPort 7
 #define intakePort 19
 #define liftPort 12
+#define rightPneumaticPort 2
+#define leftPneumaticPort 5
 
 #define motorP 0
 #define motorI 0
 #define motorD 0
+#define autoP 0
+#define autoI 0
+#define autoD 0
 #define inertialP 0
 #define inertialI 0
 #define inertialD 0
@@ -34,6 +39,21 @@ drivebaseMotorStore drivebaseMotors = drivebaseMotorStore {
     createPID<pros::Motor>{pros::Motor(lRPort, MOTOR_GEAR_600, true), motorP, motorI, motorD}
 };
 
+const int32_t &averageMotors::getEncoders() {
+    const int32_t &averageEncoderValue = (
+        (motors.rF.readInput.get_position() * 3) +
+         motors.rM.readInput.get_position() +
+          motors.rR.readInput.get_position() +
+           (motors.lF.readInput.get_position() * 3) +
+            motors.lM.readInput.get_position() +
+             motors.lR.readInput.get_position()
+             ) / 6;
+
+    return averageEncoderValue;
+}
+
+createPID<averageMotors> autoPID = createPID<averageMotors>{drivebaseMotors, autoP, autoI, autoD};
+
  createPID<pros::Rotation> puncherRotation = createPID<pros::Rotation> {
     pros::Rotation(rotationPort, false), rotationP, rotationI, rotationD
 };
@@ -43,3 +63,6 @@ drivebaseMotorStore drivebaseMotors = drivebaseMotorStore {
 pros::Motor liftMotor(liftPort, MOTOR_GEAR_100, true);
 pros::Motor puncher(puncherPort, MOTOR_GEAR_100, false);
 pros::Motor intake(intakePort, MOTOR_GEAR_200, false);
+
+makeToggleable<pros::ADIDigitalOut> rightWing = makeToggleable<pros::ADIDigitalOut>{pros::ADIDigitalOut(rightPneumaticPort)};
+makeToggleable<pros::ADIDigitalOut> leftWing = makeToggleable<pros::ADIDigitalOut>{pros::ADIDigitalOut(leftPneumaticPort)};

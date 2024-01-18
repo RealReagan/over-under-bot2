@@ -81,6 +81,7 @@ void opcontrol(void);
 #include "subsystemheaders\puncher.hpp"
 #include "subsystemheaders\intake.hpp"
 #include "subsystemheaders\lift.hpp"
+#include "subsystemheaders\pneumatics.hpp"
 #include <tuple>
 //#include <iostream>
 #endif

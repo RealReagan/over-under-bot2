@@ -13,10 +13,16 @@ template <> const float createPID<pros::Imu>::PIDAdjust(const float& target) {
     const float& sensorReading = readInput.get_rotation();
     return PIDCalculations.proport(target, sensorReading);
 }
+
 template <> const float createPID<pros::Motor>::PIDAdjust(const float& target) {
     float sensorReading = readInput.get_actual_velocity();
     sensorReading *= RPMTOVOLT;
     return target + PIDCalculations.proport(target, sensorReading);
+}
+
+template <> const float createPID<averageMotors>::PIDAdjust(const float& target) {
+    float sensorReading = readInput.getEncoders();
+    return PIDCalculations.proport(target, sensorReading);
 }
 
 
