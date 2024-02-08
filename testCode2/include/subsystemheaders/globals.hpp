@@ -1,5 +1,8 @@
 #include "main.h"
-
+#define PI (atan(1) * 4)
+#define DISTANCERIGHT 7
+#define DISTANCELEFT 7
+#define TICKSPERROTATION 910
 //create controller
 extern pros::Controller master;
 
@@ -21,7 +24,15 @@ struct drivebaseMotorStore{
 struct averageMotors {
     drivebaseMotorStore motors;
 
-    const int32_t &getEncoders();
+    const float getEncoders();
+};
+
+struct splitMotors {
+    pros::Motor front;
+    pros::Motor mid;
+    pros::Motor rear;
+
+    const float getEncoders();
 };
 //Makes an item toggleable by storeing it's current state
 template <class item> struct makeToggleable {
@@ -36,6 +47,9 @@ Motors
 //Stores all motors used for drivebase
 extern drivebaseMotorStore drivebaseMotors;
 //store motors for usage in auto
+
+extern createPID<splitMotors> rightPID;
+extern createPID<splitMotors> leftPID;
 extern createPID<averageMotors> autoPID;
 
 //Stores value for PID controls
@@ -50,3 +64,4 @@ extern pros::Motor intake;
 //Create pneumatic colonoids
 extern makeToggleable<pros::ADIDigitalOut> rightWing;
 extern makeToggleable<pros::ADIDigitalOut> leftWing;
+extern makeToggleable<pros::ADIDigitalOut> clip;

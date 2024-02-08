@@ -13,3 +13,7 @@ Driver functions
 void setLift(int32_t shouldSpin){
     spinLift(liftSpeed *  shouldSpin);
 }
+
+// void toggleLift(){
+//     if(liftMotor.get_position)
+// }

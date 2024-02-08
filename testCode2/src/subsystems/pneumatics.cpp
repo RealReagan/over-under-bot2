@@ -5,6 +5,10 @@ void setPneumatic(const bool &rightState, const bool &leftState) {
     leftWing.controlledItem.set_value(leftState);
 }
 
+void setClip(const bool &state) {
+    clip.controlledItem.set_value(state);
+}
+
 /*
 Driver Controls
 */
@@ -14,4 +18,22 @@ void inverseWing()  {
     leftWing.state = !leftWing.state;
 
     setPneumatic(rightWing.state, leftWing.state);
+}
+
+void inverseRight()  {
+    rightWing.state = !rightWing.state;
+
+    setPneumatic(rightWing.state, leftWing.state);
+}
+
+void inverseLeft()  {
+    leftWing.state = !leftWing.state;
+
+    setPneumatic(rightWing.state, leftWing.state);
+}
+
+void inverseClip() {
+    clip.state = !clip.state;
+
+    setClip(clip.state);
 }

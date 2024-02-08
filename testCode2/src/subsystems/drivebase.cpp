@@ -23,12 +23,12 @@ void PIDMotorSet(const float& vertTar, const float& latTar) {
     auto adjustedValues = calcPIDMotors(rightTar, leftTar);
 
     spinMotors(
-    adjustedValues.rF,
-    adjustedValues.rM,
-    adjustedValues.rR,
-    adjustedValues.lF,
-    adjustedValues.lM,
-    adjustedValues.lR
+        (adjustedValues.rF ),
+        (adjustedValues.rM ),
+        (adjustedValues.rR ),
+        (adjustedValues.lF ),
+        (adjustedValues.lM ),
+        (adjustedValues.lR )
     );
 
 }
@@ -36,48 +36,127 @@ void PIDMotorSet(const float& vertTar, const float& latTar) {
 /*
 Auto Controls
 */
-#define errorTolerance 5 //in encoder Ticks
-#define turnErrorTolerance 2 //in degrees
+#define errorTolerance 80
+#define turnErrorTolerance 1
 
-void PIDTranslate(const float &valueChange, const float & degreeChange) {
-    const float &target = autoPID.readInput.getEncoders() + valueChange;
-    float difference = autoPID.readInput.getEncoders() - target;
+void PIDTranslate(const float &valueChange, const float &degreeChange, const float maxSpeed) {
+    const float target = autoPID.readInput.getEncoders() + valueChange;
+    const float degreeTarget = inertialPID.readInput.get_rotation() + degreeChange;
 
-    const float &degreeTarget = inertialPID.readInput.get_rotation() + valueChange;
-    float degreeDifference = inertialPID.readInput.get_rotation() - target;
+    float straightValue = autoPID.PIDAdjust(target);
+    float turnValue = inertialPID.PIDAdjust(degreeTarget);
 
-    while (difference > errorTolerance && degreeDifference > turnErrorTolerance) {
-        float straightValue = autoPID.PIDAdjust(target);
-        float turnValue = inertialPID.PIDAdjust(degreeTarget);
+    int straightDirection = (straightValue > 0) ? 1: -1;
+    int turnDirection = (turnValue > 0) ? 1: -1;
+    if (fabs(valueChange) != 0) {
+        while (fabs(autoPID.readInput.getEncoders() - target) > errorTolerance || fabs(inertialPID.readInput.get_rotation() - degreeTarget) > turnErrorTolerance) {
+            enforceMaxSpeedGeneral(&straightValue, &turnValue, maxSpeed);
+            PIDMotorSet(straightValue, turnValue);
 
-        float rightValue = straightValue - turnValue;
-        float leftValue = straightValue + turnValue;
+            straightValue = autoPID.PIDAdjust(target);
+            turnValue = inertialPID.PIDAdjust(degreeTarget);
 
+            pros::delay(10);
+        }
+    }
+    else {
+        while (fabs(inertialPID.readInput.get_rotation() - degreeTarget) > turnErrorTolerance) {
+            turnValue = inertialPID.PIDAdjust(degreeTarget);
+            spinMotors (
+                -turnValue,
+                -turnValue,
+                -turnValue,
+                turnValue,
+                turnValue,
+                turnValue
+            );
+            pros::delay(10);
+        }
+    }
+    int time = 0;
+    if(degreeChange == 0) {
+        while (time < 200) {
+            PIDMotorSet(0,0);
+            time += 20;
+            pros::delay(20);
+        }
+    }
+    spinMotors(0,0,0,0,0,0);
+}
+
+void curveTurn(const float &rightTarget, const float& leftTarget, const float maxSpeed) {
+    float rightValue = rightPID.PIDAdjust(rightTarget);
+    float leftValue = leftPID.PIDAdjust(leftTarget);
+    while(fabs(rightPID.readInput.getEncoders() - rightTarget) > errorTolerance || fabs(leftPID.readInput.getEncoders() - leftTarget) > errorTolerance) {
+        enforceMaxSpeedCurves(&rightValue, &leftValue, maxSpeed);
+        // adjustedMotors spinVals = calcPIDMotors(rightValue, leftValue);
         spinMotors(
-            rightValue,
-            rightValue,
-            rightValue,
-            leftValue,
-            leftValue,
-            leftValue
+            rightValue, rightValue, rightValue, leftValue, leftValue, leftValue
+            // spinVals.rF,
+            // spinVals.rM,
+            // spinVals.rR,
+            // spinVals.lF,
+            // spinVals.lM,
+            // spinVals.lR
         );
 
-        difference = autoPID.readInput.getEncoders() - target;
-        degreeDifference = inertialPID.readInput.get_rotation() - target;
+        rightValue = rightPID.PIDAdjust(rightTarget);
+        leftValue = leftPID.PIDAdjust(leftTarget);
+
+
+        pros::delay(10);
     }
+}
+
+void execCurveTurn(const float &turnDegrees, const float &radiusInches, const int &direction, const float maxSpeed) {
+    const float &turnRadians = turnDegrees * ((2 * PI)/360);
+    
+    const float &rightTargetRad = PI * (radiusInches - (direction * DISTANCERIGHT));
+    const float &leftTargetRad = PI * (radiusInches + (direction * DISTANCELEFT));
+
+    const float &rightTargetTicks = rightTargetRad * (TICKSPERROTATION / (2 * PI));
+    const float &leftTargetTicks = leftTargetRad * (TICKSPERROTATION / (2 * PI));
+
+    curveTurn(rightTargetTicks, leftTargetTicks, maxSpeed);
 }
 /*
 Calculations
 */
 const adjustedMotors calcPIDMotors(const float& rightTar, const float& leftTar) {
+    const float &twoRight  = (drivebaseMotors.rF.PIDAdjust(rightTar * 200/127.0) * (127/200.0));
+    const float &sixRight  = (drivebaseMotors.rM.PIDAdjust(rightTar * 600/127.0) * (127/600.0));
+    const float &twoLeft  = (drivebaseMotors.lF.PIDAdjust(leftTar * 200/127.0) * (127/200.0));
+    const float &sixLeft  = (drivebaseMotors.lM.PIDAdjust(leftTar * 600/127.0) * (127/600.0));
     const auto& adjustedValues = adjustedMotors{
-        drivebaseMotors.rF.PIDAdjust(rightTar),
-        drivebaseMotors.rM.PIDAdjust(rightTar),
-        drivebaseMotors.rR.PIDAdjust(rightTar),
-        drivebaseMotors.lF.PIDAdjust(leftTar),
-        drivebaseMotors.lM.PIDAdjust(leftTar),
-        drivebaseMotors.lR.PIDAdjust(leftTar)
+        rightTar + twoRight,
+        rightTar + sixRight,
+        rightTar + sixRight,
+        leftTar + twoLeft,
+        leftTar + sixLeft,
+        leftTar + sixLeft
     };
 
     return adjustedValues;
+}
+
+void enforceMaxSpeedGeneral(float* straightValue, float* turnValue, const float maxSpeed) {
+    int straightDirection = (*straightValue > 0) ? 1: -1;
+    int turnDirection = (*turnValue > 0) ? 1: -1;
+    if(fabs(*straightValue + *turnValue) > maxSpeed || fabs(*straightValue - *turnValue) > maxSpeed) {
+        float turnRatio = fabs(*turnValue / (fabs(*turnValue) + fabs(*straightValue)));
+        float straightRatio = fabs(*straightValue / (fabs(*straightValue) + fabs(*turnValue)));
+        *turnValue = turnDirection * turnRatio * maxSpeed;
+        *straightValue = straightDirection * straightRatio * maxSpeed;
+    }
+}
+
+void enforceMaxSpeedCurves(float* rightValue, float* leftValue, const float maxSpeed) {
+    int rightDirection = (*rightValue > 0) ? 1: -1;
+    int leftDirection = (*leftValue > 0) ? 1: -1;
+    if(fabs(*rightValue + *leftValue) > maxSpeed || fabs(*rightValue - *leftValue) > maxSpeed) {
+        float leftRatio = fabs(*leftValue / (fabs(*leftValue) + fabs(*rightValue)));
+        float rightRatio = fabs(*rightValue / (fabs(*rightValue) + fabs(*leftValue)));
+        *leftValue = leftDirection * leftRatio * maxSpeed;
+        *rightValue = rightDirection * rightRatio * maxSpeed;
+    }
 }
