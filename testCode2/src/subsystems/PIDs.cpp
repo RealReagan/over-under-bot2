@@ -2,7 +2,7 @@
 
 #define INTEGRALTHRESHOLD 25
 #define INTEGRALMAX 127
-#define ERRORMAX 123123678
+#define ERRORMAX 127
 #define RPMTOVOLT (127/600)
 
 template <> const float createPID<pros::Rotation>::PIDAdjust(const float& target) {

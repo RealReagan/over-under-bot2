@@ -51,31 +51,27 @@ void competition_initialize() {}
  */
 
 void offenseAuto() {
-	ERRORMAX = 70;
-	PIDTranslate(-2250,0);
-	ERRORMAX = 127;
+	PIDTranslate(-2250,0,70,1500);
 	PIDTranslate(0,90);
 	spinIntake(127);
-	PIDTranslate(1650,0);
-	PIDTranslate(-900,0);
+	PIDTranslate(1650,0,127,1500);
+	PIDTranslate(-900,0,80);
 	spinIntake(0);
 	PIDTranslate(0,135);
 	spinIntake(-127);
 	PIDTranslate(700,0);
 	PIDTranslate(-900,0);
-	PIDTranslate(0,-48);
+	PIDTranslate(0,-45,80);
 	spinIntake(127);
-	ERRORMAX = 90;
-	PIDTranslate(1100,0);
-	ERRORMAX = 127;
-	pros::delay(200);
+	PIDTranslate(1800,0,80);
+	pros::delay(100);
 	spinIntake(-90);
 	PIDTranslate(0,90);
-	PIDTranslate(400,0);
-	PIDTranslate(-400,0);
-	PIDTranslate(0,-182);
+	PIDTranslate(600,0);
+	PIDTranslate(-600,0);
+	PIDTranslate(0,-180,80);
 	spinIntake(127);
-	PIDTranslate(900,0);
+	PIDTranslate(900,0,127,750);
 	pros::delay(200);
 	PIDTranslate(0,180);
 	PIDTranslate(300,0);
@@ -95,23 +91,6 @@ void offenseAuto() {
 }
 
 void defenseAuto() {
-	inertialPID.readInput.tare_rotation();
-	PIDTranslate(600,0);
-	inverseWing();
-	pros::delay(200);
-	PIDTranslate(-700,0);
-	pros::delay(200);
-	inverseWing();
-	pros::delay(500);
-	PIDTranslate(0,130);
-	pros::delay(300);
-	spinIntake(-127);
-	PIDTranslate(2000,0);
-	spinIntake(0);
-}
-
-void defenseTest() {
-	spinIntake(-127);
 	PIDTranslate(600,0);
 	inverseWing();
 	PIDTranslate(100,0);
@@ -119,29 +98,28 @@ void defenseTest() {
 	inverseWing();
 	PIDTranslate(-100,0);
 	pros::delay(200);
-	spinIntake(-0);
 	PIDTranslate(0,45);
 	PIDTranslate(-200,0);
-	spinMotors(-127,-127,-127,-127,-127,-127);
+	spinMotors(-60,-60,-60,-60,-60,-60);
 	pros::delay(500);
-	PIDTranslate(2300,0);
-	PIDTranslate(0,45);
-	PIDTranslate(800,0);
-	PIDTranslate(0,-45);
+	PIDTranslate(1800,0);
+	PIDTranslate(0,45,80);
+	PIDTranslate(1350,0);
+	PIDTranslate(0,-45,80);
 	spinIntake(127);
-	PIDTranslate(1300,0,60);
+	PIDTranslate(1400,0,50);
 	PIDTranslate(100,0);
-	PIDTranslate(-1300,0);
+	PIDTranslate(-1250,0);
 	PIDTranslate(0,-135);
 	spinIntake(0);
 	PIDTranslate(1600,0);
-	PIDTranslate(0,-80);
+	PIDTranslate(0,-90, 60);
 	PIDTranslate(200,0);
 	pros::delay(200);
-	PIDTranslate(750,0);
+	PIDTranslate(800,0);
 	spinIntake(-127);
-	PIDTranslate(0,-55);
-	PIDTranslate(1650,0);
+	PIDTranslate(0,-55,60);
+	PIDTranslate(1750,0,90);
 }
 
 void skills() {
@@ -188,114 +166,76 @@ void skills() {
 
 void skillsTwo() {
 	puncherToggle(); 
-	pros::delay(34000);
+	pros::delay(30000);
 	puncherToggle();
 	PIDTranslate(0,60);
-	PIDTranslate(-1700,0, 70);
-	PIDTranslate(0,45);
-	spinMotors(-127,-127,-127,-127,-127,-127);
-	pros::delay(600);
+	PIDTranslate(-100,0);
+	spinMotors(-127,-127,-127,0,-127,0);
+	pros::delay(1000);
 	PIDTranslate(400,0);
 	PIDTranslate(0,-45);
-	PIDTranslate(2400,0);
-	PIDTranslate(0,-45);
-	PIDTranslate(5600,0);
-	PIDTranslate(0,135);
-	inverseWing();
-	PIDTranslate(-1900,0,80);
-	inverseLeft();
-	PIDTranslate(0,-110,60);
-	PIDTranslate(-1500,0,80);
-	inverseRight();
-	PIDTranslate(300,0);
-	PIDTranslate(0,155,70);
-	PIDTranslate(1800,0);
-	inverseLeft();
-	PIDTranslate(0,90);
-	PIDTranslate(1900,0);	
-	PIDTranslate(0,90);
-	inverseWing();
-	PIDTranslate(1600,0);
-	inverseRight();
-	PIDTranslate(-1700,0);
-	PIDTranslate(0,-92);
-	PIDTranslate(2900,0,100);
-	inverseLeft();
-	PIDTranslate(0,125);
-	inverseRight();
 	PIDTranslate(2700,0);
-	PIDTranslate(0,-35);
-	PIDTranslate(-1500,0);
-	spinMotors(127, 127, 127, 127, 127, 127);
-	pros::delay(1000);
-	PIDTranslate(-2000,0);
-	spinMotors(127, 127, 127, 127, 127, 127);
-	pros::delay(1000);
-	inverseWing();
-	PIDTranslate(-1000,0);
-	PIDTranslate(0,360);
-}
-
-void skillsThree() {
-	puncherToggle(); 
-	pros::delay(34000);
-	puncherToggle();
-	PIDTranslate(0,60);
-	PIDTranslate(-1700,0, 70);
-	PIDTranslate(0,45);
+	PIDTranslate(0,-45);
+	PIDTranslate(5400,0);
+	PIDTranslate(0,-180);
+	PIDTranslate(-300, 0);
+	spinMotors(0,-100,0,-127,-127,-127);
+	pros::delay(1500);
+	PIDTranslate(500,0);
 	spinMotors(-127,-127,-127,-127,-127,-127);
-	pros::delay(600);
-	PIDTranslate(400,0);
-	PIDTranslate(0,-45);
-	PIDTranslate(2400,0);
-	PIDTranslate(0,-45);
-	PIDTranslate(5600,0);
-	PIDTranslate(0,135);
-	inverseWing();
-	PIDTranslate(-1900,0,80);
-	inverseLeft();
-	PIDTranslate(0,-110,60);
-	PIDTranslate(-1500,0,80);
-	inverseRight();
-	PIDTranslate(300,0);
-	PIDTranslate(0,155,70);
-	PIDTranslate(1800,0);
+	pros::delay(500);
+	PIDTranslate(500,0);
+	PIDTranslate(0,90,80);
+	PIDTranslate(2700,0);
 	inverseLeft();
 	PIDTranslate(0,90);
-	PIDTranslate(1900,0);	
-	PIDTranslate(0,90);
-	inverseWing();
-	PIDTranslate(1600,0);
+	PIDTranslate(900,0);	
+	PIDTranslate(0,50);
 	inverseRight();
-	PIDTranslate(-1700,0);
+	PIDTranslate(1900,0, 127, 2000);
+	inverseRight();
+	PIDTranslate(0,40);
+	PIDTranslate(-700,0);
+	inverseRight();
+	PIDTranslate(1200,0, 127, 1500);
+	inverseWing();
+	PIDTranslate(-1400,0);
 	PIDTranslate(0,-92);
-	PIDTranslate(2900,0,100);
 	inverseLeft();
+	PIDTranslate(2400,0,127,2000);
 	PIDTranslate(0,125);
 	inverseRight();
-	PIDTranslate(2700,0);
-	PIDTranslate(0,-35);
-	PIDTranslate(-1500,0);
-	spinMotors(127, 127, 127, 127, 127, 127);
-	pros::delay(1000);
-	PIDTranslate(-2000,0);
-	spinMotors(127, 127, 127, 127, 127, 127);
-	pros::delay(1000);
+	PIDTranslate(3200,0, 127, 2000);
+	inverseLeft();
+	PIDTranslate(0,-50);
+	PIDTranslate(-2000,0,1500);
+	spinMotors(-127, -127, -127, -127, -127, -127);
+	pros::delay(300);
+	inverseLeft();
+	PIDTranslate(2200,0, 127, 1500);
 	inverseWing();
-	PIDTranslate(-1000,0);
-	PIDTranslate(0,360);
+	PIDTranslate(-350,0);
+	PIDTranslate(0,-95);
+	PIDTranslate(4700,0,3000);
+	PIDTranslate(0,-90);
+	PIDTranslate(-100,0);
+	spinMotors(-127,-127,-127,0,-127,0);
+	pros::delay(2000);
+	PIDTranslate(500,0);
+	// spinMotors(-127,-127,-127,-127,-127,-127);
+	// pros::delay(1000);
 }
 
 void turnTest() {
-	execCurveTurn(90, 12, 1, 127);
+	execCurveTurn(90, 6, 1, 80);
 	puncherToggle();
 }
 
 void autonomous() {
-	//skillsTwo();
-	//defenseTest();
-	//offenseAuto();
-	turnTest();
+	// skillsTwo();
+	// defenseAuto();
+	offenseAuto();
+	//turnTest();
 }
 
 /**

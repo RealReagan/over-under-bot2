@@ -1,8 +1,8 @@
 #include "main.h"
-#define PI (atan(1) * 4)
+#define PI 3.141592654
 #define DISTANCERIGHT 7
 #define DISTANCELEFT 7
-#define TICKSPERROTATION 910
+#define TICKSPERROTATION 333.3333333
 //create controller
 extern pros::Controller master;
 
